@@ -1,0 +1,36 @@
+#!/bin/sh
+
+# Function to check commit message
+check_commit_message() {
+  pattern='^#[0-9]+: .+'
+  commit_message=$(cat "$1")
+  if echo "$commit_message" | grep -qE "$pattern"; then
+    exit 0
+  else
+    echo "Error: commit 메시지 형식이 잘못 되었습니다."
+    echo "commit msg는 #{이슈번호}: {내용} 형식으로 작성해주세요."
+    echo "예: #21: stack prepareTransaction 구현"
+    exit 1
+  fi
+}
+
+# Check if running on Windows
+if [ -n "$WINDIR" ]; then
+  # Use PowerShell on Windows
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
+    \$pattern = '^#[0-9]+: .+'
+    \$commitMessage = Get-Content -Path '$1'
+    if (\$commitMessage -match \$pattern) {
+      exit 0
+    } else {
+      Write-Host 'Error: commit 메시지 형식이 잘못 되었습니다.' -ForegroundColor Red
+      Write-Host 'commit msg는 #{이슈번호}: {내용} 형식으로 작성해주세요.' -ForegroundColor Yellow
+      Write-Host '예: #21: stack prepareTransaction 구현' -ForegroundColor Yellow
+      exit 1
+    }
+  "
+  exit $?
+else
+  # Use shell script for Unix-like systems
+  check_commit_message "$1"
+fi

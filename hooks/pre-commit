@@ -1,0 +1,40 @@
+#!/bin/sh
+
+# Define the branch name pattern
+pattern='(^(feature|bug|hotfix|enhancement|documentation|ui)/#[0-9]+_[a-zA-Z0-9._-]+$)|(^(release)/v[0-9]+\.[0-9]+\.[0-9]+(-pre)?$)'
+
+# Function to check branch name in shell script
+check_branch_name_sh() {
+  branch_name=$(git rev-parse --abbrev-ref HEAD)
+
+  if echo "$branch_name" | grep -qE "$pattern"; then
+    exit 0
+  else
+    echo "Error: 브랜치 이름이 잘못 되었습니다."
+    echo "브랜치 이름은 다음과 같은 패턴들로 시작해야 합니다.: feature/#{이슈번호}_, bug/#{이슈번호}_, hotfix/#{이슈번호}_, release/v{버전}"
+    echo "예: feature/#21_stack_transaction, release/v1.0.0"
+    exit 1
+  fi
+}
+
+# Check if running on Windows
+if [ -n "$WINDIR" ]; then
+  # Use PowerShell on Windows
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
+    \$branchNamePattern = '$pattern'
+    \$branchName = git rev-parse --abbrev-ref HEAD
+
+    if (\$branchName -match \$branchNamePattern) {
+      exit 0
+    } else {
+      Write-Host 'Error: 브랜치 이름이 잘못 되었습니다.' -ForegroundColor Red
+      Write-Host '브랜치 이름은 다음과 같은 패턴들로 시작해야 합니다.: feature/#{이슈번호}_, bug/#{이슈번호}_, hotfix/#{이슈번호}_, release/v{버전}' -ForegroundColor Yellow
+      Write-Host '예: feature/#21_stack_transaction, release/v1.0.0' -ForegroundColor Yellow
+      exit 1
+    }
+  "
+  exit $?
+else
+  # Use shell script for Unix-like systems
+  check_branch_name_sh
+fi

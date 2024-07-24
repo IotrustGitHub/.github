@@ -14,7 +14,7 @@
 1. GitHub에 로그인한 상태로 [IotrustGitHub 페이지](https://github.com/IotrustGitHub)에 접속합니다.
 2. [Repositories 페이지](https://github.com/orgs/IotrustGitHub/repositories)의 우측 상단 `New repository` 버튼을 클릭합니다.
 
-![IotrustGitHub-2](https://github.com/user-attachments/assets/cd5a20f0-c7db-42ee-a13a-abf6debfabaf)
+![IotrustGitHub-2](https://github.com/user-attachments/assets/455e4b66-ef0e-4596-b30f-99dd94d82865)
 
 3. 레포지토리 **이름**을 입력합니다.
    - 레포지토리 이름은 케밥 케이스(kebab case)를 사용하여 명명합니다. (예: `github-project-name`)
@@ -46,7 +46,7 @@
    - `Maintain`: Action 등의 중요한 설정 권한은 없으나 해당 레포지토리를 전반적으로 관리 가능
    - `Admin`: 모든 작업을 포함하여 프로젝트에 대한 전체 권한 보유
 
-![IotrustGitHub-5-2](https://github.com/user-attachments/assets/6b1b99a2-59a5-4939-a9a6-ef79be1b4213)
+![IotrustGitHub-5-2](https://github.com/user-attachments/assets/7812f715-8e42-4764-ae0e-3c36ba627141)
 
 ### 2) 브랜치 보호 규칙 설정
 

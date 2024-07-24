@@ -19,8 +19,31 @@ Error: 브랜치 이름이 잘못 되었습니다.
 브랜치 이름은 다음과 같은 패턴들로 시작해야 합니다.: feature/#{이슈번호}_, bug/#{이슈번호}_, hotfix/#{이슈번호}_, release/v{버전}_
 예: feature/#21_stack_transaction
 ```
+* tag name
+  - tag 설정 후 push 할때 설정된 tag name이 규칙에 맞지 않으면 에러가 발생됩니다.
+```
+git push origin bug/#00_test
+Error: tag 이름이 잘못 되었습니다.
+tag 이름은 다음 형식 중 하나로 작성해주세요:
+1. vX.X.X-pre
+2. vX.X.X-prod
+3. vX.X.X-stage
+4. vX.X.X-dev
+5. vX.X.X-dev-wepin
+6. vX.X.X-dev-dcent
+7. vX.X.X-prod-wepin
+8. vX.X.X-prod-dcent
+9. vX.X.X-v1-dev
+10. vX.X.X-v1-stage
+11. vX.X.X-v1-prod
+예:
+1. v1.0.0-pre
+2. v1.0.0-prod-wepin
+```
 ## Hooks를 로컬 리포지토리에 적용하기
 * hooks 폴더에 있는 모든 파일을 리포지토리의 .git/hooks에 복사하면 commit 시에 자동으로 동작한다.
+* macOS와 linux에서는 hooks 폴더에 있는 모든 파일을 실행 가능하게 설정해야 합니다.
+  - `chmod a+x *`
 
 ## Hooks를 로컬 리포지토리 전체에 적용하기
 * .githooks 폴더를 생성한다.

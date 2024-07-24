@@ -1,36 +1,48 @@
 #!/bin/sh
 
-# Function to check commit message
-check_commit_message() {
-  pattern='^#[0-9]+: .+'
+# Define the commit message patterns and error message
+pattern='(^#[0-9]+: .+)|(^(DEV-T-)[0-9]+ .+)'
+error_message="Error: commit 메시지 형식이 잘못 되었습니다.
+commit msg는 다음 형식 중 하나로 작성해주세요:
+1. #{이슈번호}: {내용}
+2. DEV-T-{번호}_{내용}
+예:
+1. #21: stack prepareTransaction 구현
+2. DEV-T-21 stack prepareTransaction 구현"
+
+# Function to check commit message in Unix-like systems
+check_commit_message_unix() {
   commit_message=$(cat "$1")
   if echo "$commit_message" | grep -qE "$pattern"; then
     exit 0
   else
-    echo "Error: commit 메시지 형식이 잘못 되었습니다."
-    echo "commit msg는 #{이슈번호}: {내용} 형식으로 작성해주세요."
-    echo "예: #21: stack prepareTransaction 구현"
+    echo "$error_message"
     exit 1
   fi
 }
 
-# Check if running on Windows
-if [ -n "$WINDIR" ]; then
-  # Use PowerShell on Windows
+# Function to check commit message in Windows using PowerShell
+check_commit_message_windows() {
+  # Escape the pattern and error message for PowerShell
+  escaped_pattern=$(printf '%s\n' "$pattern" | sed 's/\\/\\\\/g; s/\//\\\//g; s/\$/\\$/g')
+  escaped_error_message=$(printf '%s\n' "$error_message" | sed 's/"/`"/g')
+
   powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
-    \$pattern = '^#[0-9]+: .+'
+    \$pattern = \"$escaped_pattern\"
     \$commitMessage = Get-Content -Path '$1'
     if (\$commitMessage -match \$pattern) {
       exit 0
     } else {
-      Write-Host 'Error: commit 메시지 형식이 잘못 되었습니다.' -ForegroundColor Red
-      Write-Host 'commit msg는 #{이슈번호}: {내용} 형식으로 작성해주세요.' -ForegroundColor Yellow
-      Write-Host '예: #21: stack prepareTransaction 구현' -ForegroundColor Yellow
+      Write-Host \"\$escaped_error_message\" -ForegroundColor Red
       exit 1
     }
   "
   exit $?
+}
+
+# Check if running on Windows
+if [ -n "$WINDIR" ]; then
+  check_commit_message_windows "$1"
 else
-  # Use shell script for Unix-like systems
-  check_commit_message "$1"
+  check_commit_message_unix "$1"
 fi

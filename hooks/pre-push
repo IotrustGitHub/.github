@@ -1,0 +1,64 @@
+#!/bin/sh
+
+# Define the tag patterns and error message
+pattern='^(v([0-9]+\.){2}[0-9]+(-pre|-prod|-stage|-dev)?|v[0-9]+\.[0-9]+\.[0-9]+-(dev|prod)-(wepin|dcent)|v[0-9]+\.[0-9]+\.[0-9]+-v1-(dev|stage|prod))$'
+error_message="Error: tag 이름이 잘못 되었습니다.
+tag 이름은 다음 형식 중 하나로 작성해주세요:
+1. vX.X.X-pre
+2. vX.X.X-prod
+3. vX.X.X-stage
+4. vX.X.X-dev
+5. vX.X.X-dev-wepin
+6. vX.X.X-dev-dcent
+7. vX.X.X-prod-wepin
+8. vX.X.X-prod-dcent
+9. vX.X.X-v1-dev
+10. vX.X.X-v1-stage
+11. vX.X.X-v1-prod
+예:
+1. v1.0.0-pre
+2. v1.0.0-prod-wepin"
+
+# Function to check tag name in Unix-like systems
+check_tag_name_unix() {
+  tag_name="$1"
+  if echo "$tag_name" | grep -qE "$pattern"; then
+    exit 0
+  else
+    echo "$error_message"
+    exit 1
+  fi
+}
+
+# Function to check tag name in Windows using PowerShell
+check_tag_name_windows() {
+  # Escape the pattern and error message for PowerShell
+  escaped_pattern=$(printf '%s\n' "$pattern" | sed 's/\\/\\\\/g; s/\//\\\//g; s/\$/\\$/g')
+  escaped_error_message=$(printf '%s\n' "$error_message" | sed 's/"/`"/g')
+
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
+    \$pattern = \"$escaped_pattern\"
+    \$tagName = '$1'
+    if (\$tagName -match \$pattern) {
+      exit 0
+    } else {
+      Write-Host \"\$escaped_error_message\" -ForegroundColor Red
+      exit 1
+    }
+  "
+  exit $?
+}
+
+# Get the tag names being pushed
+tag_names=$(git tag --contains $(git rev-parse HEAD))
+
+# Check if running on Windows
+if [ -n "$WINDIR" ]; then
+  for tag in $tag_names; do
+    check_tag_name_windows "$tag"
+  done
+else
+  for tag in $tag_names; do
+    check_tag_name_unix "$tag"
+  done
+fi

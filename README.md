@@ -1,6 +1,7 @@
 # Organization 전체에 Issue와 PR 템플릿 적용
 
 # Git Hooks를 이용하여 commit msg와 branch 이름 제한
+* git은 2.22 버전 이상을 사용해야 한다.
 
 ## 사용예
 
@@ -62,7 +63,7 @@ tag 이름은 다음 형식 중 하나로 작성해주세요:
 - 아래와 같은 명령을 실행하면 git를 사용하는 모든 명령은 생성한 폴더에 있는 hooks 파일을 실행한다.
 
 ```
-git config core.hooksPath .githooks(새로 생성한 폴더 경로)
+git config --global core.hooksPath .githooks(새로 생성한 폴더 경로)
 ```
 
 - get 명령으로 정상적으로 설정되었는지 확인한다.

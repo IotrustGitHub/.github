@@ -10,7 +10,7 @@ error_message="Error: 브랜치 이름이 잘못 되었습니다.
 
 # Function to check branch name in Unix-like systems
 check_branch_name_unix() {
-  branch_name=$(git rev-parse --abbrev-ref HEAD)
+  branch_name=$(git branch --show-current)
 
   if echo "$branch_name" | grep -qE "$pattern"; then
     exit 0
@@ -29,7 +29,7 @@ check_branch_name_windows() {
   powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
     \$branchNamePattern = \"$escaped_pattern\"
     \$errorMessage = \"$escaped_error_message\"
-    \$branchName = git rev-parse --abbrev-ref HEAD
+    \$branchName = git branch --show-current
 
     if (\$branchName -match \$branchNamePattern) {
       exit 0

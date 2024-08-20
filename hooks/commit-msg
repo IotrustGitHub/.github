@@ -24,16 +24,18 @@ check_commit_message_unix() {
 # Function to check commit message in Windows using PowerShell
 check_commit_message_windows() {
   # Escape the pattern and error message for PowerShell
-  escaped_pattern=$(printf '%s\n' "$pattern" | sed 's/\\/\\\\/g; s/\//\\\//g; s/\$/\\$/g')
+  escaped_pattern=$(printf '%s\n' "$pattern" | sed 's/\\/\\\\/g; s/\//\\\//g')
   escaped_error_message=$(printf '%s\n' "$error_message" | sed 's/"/`"/g')
 
   powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
     \$pattern = \"$escaped_pattern\"
     \$commitMessage = Get-Content -Path '$1'
+    \$errorMessage = \"$escaped_error_message\"
+
     if (\$commitMessage -match \$pattern) {
       exit 0
     } else {
-      Write-Host \"\$escaped_error_message\" -ForegroundColor Red
+      Write-Host \"\$errorMessage\" -ForegroundColor Red
       exit 1
     }
   "

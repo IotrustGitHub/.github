@@ -23,7 +23,7 @@ check_branch_name_unix() {
 # Function to check branch name in Windows using PowerShell
 check_branch_name_windows() {
   # Escape the pattern and error message for PowerShell
-  escaped_pattern=$(printf '%s\n' "$pattern" | sed 's/\\/\\\\/g; s/\//\\\//g; s/\$/\\$/g')
+  escaped_pattern=$(printf '%s\n' "$pattern" | sed 's/\\/\\\\/g; s/\//\\\//g')
   escaped_error_message=$(printf '%s\n' "$error_message" | sed 's/"/`"/g')
 
   powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "

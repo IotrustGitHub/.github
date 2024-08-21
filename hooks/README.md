@@ -80,7 +80,7 @@ git config --global core.hooksPath .githooks(새로 생성한 폴더 경로)
 git config --get core.hooksPath
 ```
 
-## ✅ Windows에서 한글 깨짐 오류 해결 방법
+## 💡 Windows에서 한글 깨짐 오류 해결 방법
 
 ### Case 1) `git log` 사용 시
 

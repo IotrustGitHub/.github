@@ -98,7 +98,7 @@ git config --get core.hooksPath
   # 현재 git config 상태 확인
   git config --global -l
 
-  # 이때 만약, i18n.commitencoding과 i18nlogoutputencoding 항목이 cp949라면, utf-8로 수정
+  # i18n.commitencoding과 i18nlogoutputencoding 항목값을 utf-8로 수정
   git config --global i18n.commitencoding "UTF-8"
   git config --global i18n.logoutputencoding "UTF-8"
   ```
@@ -109,53 +109,54 @@ git config --get core.hooksPath
 
 ```powershell
 PS C:\Users\user\Documents\GitHub\dcent-hybrid-webview-> git commit -m "임시  커밋"
-[feature/#39_refactoring_to_common_component e1db12e5] **?꾩떆떆꾩**
+
+[feature/#39_refactoring_to_common_component e1db12e5] ?꾩떆떆꾩
 ```
 
 - 커밋 메시지를 남겼을 때 위와 같이 한글이 깨져보이는 경우가 발생합니다.
 
 #### 해결 방법
 
-1. **해결 방법 1)**
+- 이 문제는 PowerShell의 인코딩 기본값이 UTF-8이 아니기 때문에 발생하는 것으로, 아래 방법으로 해결할 수 있습니다.
 
-   - 이 문제는 PowerShell의 인코딩 기본값이 UTF-8이 아니기 때문에 발생하는 것으로, 아래 방법으로 해결할 수 있습니다.
+1. **해결 방법 1)**
 
    ```powershell
    # OutputEncoding을 UTF-8로 수정
    $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
    ```
 
+- 다만 **해결 방법 1)은 경우 터미널을 킬 때마다 계속 다시 입력해줘야 하므로, 터미널이 켜질 때마다 자동으로 실행되게 설정합니다.**
+
 2. **해결 방법 2) ← `추천`** ✨
 
-   - **해결 방법 1)은 경우 터미널을 킬 때마다 계속 다시 입력해줘야 하므로, 터미널이 켜질 때마다 자동으로 실행되게 합니다.**
+   1. PowerShell 프로필이 존재하는지 확인합니다. 다음 명령어를 실행하세요:
 
-     1. PowerShell 프로필이 존재하는지 확인합니다. 다음 명령어를 실행하세요:
+      ```powershell
+      Test-Path $PROFILE
+      ```
 
-        ```powershell
-        Test-Path $PROFILE
-        ```
+   2. 만약 `False`가 반환되면, 프로필을 생성해야 합니다. 다음 명령어로 생성할 수 있습니다:
 
-     2. 만약 `False`가 반환되면, 프로필을 생성해야 합니다. 다음 명령어로 생성할 수 있습니다:
+      ```powershell
+      New-Item -Path $PROFILE -Type File -Force
+      ```
 
-        ```powershell
-        New-Item -Path $PROFILE -Type File -Force
-        ```
+   3. 프로필 파일을 편집하기 위해 경로 이동 후 설정 파일(`Microsoft.PowerShell_profile.ps1`)을 실행합니다:
 
-     3. 프로필 파일을 편집하기 위해 경로 이동 후 설정 파일(`Microsoft.PowerShell_profile.ps1`)을 실행합니다:
+      ```powershell
+      # 해당 파일이 있는 경로로 이동
+      cd C:\Users\{PC 유저 이름(각 PC마다 다름)}\Documents\WindowsPowerShell
 
-        ```powershell
-        # 해당 파일이 있는 경로로 이동
-        cd C:\Users\{PC 유저 이름(각 PC마다 다름)}\Documents\WindowsPowerShell
+      # 메모장 실행
+      notepad $PROFILE
+      ```
 
-        # 메모장 실행
-        notepad $PROFILE
-        ```
+   4. 메모장이 열리면, 다음 줄을 추가합니다:
 
-     4. 메모장이 열리면, 다음 줄을 추가합니다:
+      ```powershell
+      $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
+      ```
 
-        ```powershell
-        $OutputEncoding = [console]::InputEncoding = [console]::OutputEncoding = New-Object System.Text.UTF8Encoding
-        ```
-
-     5. 파일을 저장하고 메모장을 닫습니다.
-     6. 그렇게 하면 PowerShell이 켜질 때마다 자동 실행됩니다.
+   5. 파일을 저장하고 메모장을 닫습니다.
+   6. 그렇게 하면 PowerShell이 켜질 때마다 자동 실행됩니다.

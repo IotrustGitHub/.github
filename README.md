@@ -12,13 +12,13 @@ GitHub 워크플로우를 효율적으로 운영하고, 프로젝트의 일관�
 
 - 레포지토리 생성 가이드와 이슈 및 풀 리퀘스트 템플릿이 포함되어 있습니다.
 
-👉 [레포지토리 생성 가이드 보러 가기](https://github.com/IotrustGitHub/.github/tree/main/github)
+👉 [레포지토리 생성 가이드 보러 가기](https://github.com/IotrustGitHub/.github/blob/main/.github/GUIDE.md)
 
 ### 2. `hooks` 폴더
 
 - Git Hook 스크립트와 해당 스크립트를 설정하는 가이드가 포함되어 있습니다.
 
-👉 [Hook 스크립트 설정 가이드 보러 가기](https://github.com/IotrustGitHub/.github/tree/main/hooks)
+👉 [Hook 스크립트 설정 가이드 보러 가기](https://github.com/IotrustGitHub/.github/blob/main/hooks/GUIDE.md)
 
 ## ✅ 사용 방법
 

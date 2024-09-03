@@ -1,0 +1,49 @@
+#!/bin/sh
+
+# Define the branch name pattern
+pattern='(^(feature|bug|hotfix|enhancement|documentation|ui)/#[0-9]+_[a-zA-Z0-9._-]+$)|#DEV-T-[0-9]+_[a-zA-Z0-9._-]+$|(^(release)/v[0-9]+\.[0-9]+\.[0-9]+(-pre)?$)'
+
+# Define the error message
+error_message="Error: 브랜치 이름이 잘못 되었습니다.
+브랜치 이름은 다음과 같은 패턴들로 시작해야 합니다.: feature/#{이슈번호}_, bug/#{이슈번호}_, hotfix/#{이슈번호}_, release/v{버전}
+예: feature/#21_stack_transaction, bug/#DEV-T-20_fix_fee_calculation, release/v1.0.0"
+
+# Function to check branch name in Unix-like systems
+check_branch_name_unix() {
+  branch_name=$(git branch --show-current)
+
+  if echo "$branch_name" | grep -qE "$pattern"; then
+    exit 0
+  else
+    echo "$error_message"
+    exit 1
+  fi
+}
+
+# Function to check branch name in Windows using PowerShell
+check_branch_name_windows() {
+  # Escape the pattern and error message for PowerShell
+  escaped_pattern=$(printf '%s\n' "$pattern" | sed 's/\\/\\\\/g; s/\//\\\//g')
+  escaped_error_message=$(printf '%s\n' "$error_message" | sed 's/"/`"/g')
+
+  powershell.exe -NoProfile -ExecutionPolicy Bypass -Command "
+    \$branchNamePattern = \"$escaped_pattern\"
+    \$errorMessage = \"$escaped_error_message\"
+    \$branchName = git branch --show-current
+
+    if (\$branchName -match \$branchNamePattern) {
+      exit 0
+    } else {
+      Write-Host \"\$errorMessage\" -ForegroundColor Red
+      exit 1
+    }
+  "
+  exit $?
+}
+
+# Check if running on Windows
+if [ -n "$WINDIR" ]; then
+  check_branch_name_windows
+else
+  check_branch_name_unix
+fi

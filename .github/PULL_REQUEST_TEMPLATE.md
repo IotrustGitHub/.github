@@ -1,6 +1,6 @@
 # 개요 :dart:
 
-- 관련 Issue 번호:
+- 관련 Issue 번호: Resolves #{ISSUE 번호}
 - 관련 문서:
 
 # 변경사항 :bookmark_tabs:
